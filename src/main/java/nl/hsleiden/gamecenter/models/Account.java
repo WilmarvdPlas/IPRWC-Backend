@@ -1,10 +1,10 @@
 package nl.hsleiden.gamecenter.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -24,15 +24,10 @@ public class Account {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column
     private Boolean administrator;
-
-    public Account() {}
-
-    public Account(String email, String password, Boolean administrator) {
-        this.email = email;
-        this.password = password;
-        this.administrator = administrator;
-    }
 
 }
