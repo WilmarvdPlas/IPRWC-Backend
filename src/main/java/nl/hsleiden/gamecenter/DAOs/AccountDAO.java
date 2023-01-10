@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class AccountDAO {
@@ -19,6 +21,18 @@ public class AccountDAO {
 
     public List<Account> getAccounts() {
         return repository.findAll();
+    }
+
+    public void createAccount(Account account) {
+        repository.save(account);
+    }
+
+    public Optional<Account> findAccountByEmail(String email) {
+        return repository.findAccountByEmail(email);
+    }
+
+    public Optional<Account> getAccount(UUID id) {
+        return repository.findById(id);
     }
 
 }
