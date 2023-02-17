@@ -29,8 +29,8 @@ public class AccountController {
         return new ResponseEntity(accountDAO.getAccounts(), HttpStatus.OK);
     }
 
-    @GetMapping(path = "{accountId}")
-    public ResponseEntity getAccount(@PathVariable("accountId") UUID id) {
+    @GetMapping(path = "{id}")
+    public ResponseEntity getAccount(@PathVariable("id") UUID id) {
         return new ResponseEntity(accountDAO.getAccount(id), HttpStatus.OK);
     }
 

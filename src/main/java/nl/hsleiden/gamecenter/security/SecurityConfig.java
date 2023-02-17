@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/account/register").permitAll()
                 // USER AND ADMIN ROUTES //
-                .antMatchers("/api/account/{accountId}").hasAnyRole("USER", "ADMINISTRATOR")
+                .antMatchers("/api/account/{id}").hasAnyRole("USER", "ADMINISTRATOR")
                 // ADMIN ROUTES //
                 .antMatchers("/api/account/**").hasRole("ADMINISTRATOR")
                 .and()
