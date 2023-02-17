@@ -2,9 +2,13 @@ package nl.hsleiden.gamecenter.models;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,5 +35,18 @@ public class Product {
 
     @Column
     private int discount;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<OrderProduct> orderProducts;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<OrderProduct> cartProducts;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.DATE)
+    @Column(name = "date_created")
+    private Date dateCreated;
 
 }
