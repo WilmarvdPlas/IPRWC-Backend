@@ -17,6 +17,8 @@ public class EmailService {
     @Value("${email_password}")
     private String password;
 
+    private final String senderName = "Game Center Support";
+
     private void sendEmail(String recipientEmail, String messageSubject, String messageText) {
         Properties properties = createProperties();
         Session session = createSession(properties, email, password);
@@ -60,7 +62,7 @@ public class EmailService {
                 InternetAddress.parse(recipientEmail)
         );
         message.setSubject(messageSubject);
-        message.setText("Beste gebruiker, \n\n" + messageText + "\n\n" + "Met vriendelijke groet,\n" + "Het Spine-team");
+        message.setText("Beste gebruiker, \n\n" + messageText + "\n\n" + "Met vriendelijke groet,\n" + senderName);
 
         return message;
     }
