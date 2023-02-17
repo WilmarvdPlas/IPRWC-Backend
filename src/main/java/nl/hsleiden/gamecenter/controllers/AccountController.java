@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -27,13 +25,13 @@ public class AccountController {
     }
 
     @GetMapping
-    public List<Account> getAccounts() {
-        return accountDAO.getAccounts();
+    public ResponseEntity getAccounts() {
+        return new ResponseEntity(accountDAO.getAccounts(), HttpStatus.OK);
     }
 
     @GetMapping(path = "{accountId}")
-    public Optional<Account> getAccount(@PathVariable("accountId") UUID id) {
-        return accountDAO.getAccount(id);
+    public ResponseEntity getAccount(@PathVariable("accountId") UUID id) {
+        return new ResponseEntity(accountDAO.getAccount(id), HttpStatus.OK);
     }
 
     @PostMapping(path = "register")
