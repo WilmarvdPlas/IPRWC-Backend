@@ -17,7 +17,6 @@ public class AccountController {
     private final AccountDAO accountDAO;
     private final PasswordEncoder passwordEncoder;
 
-
     @Autowired
     public AccountController(AccountDAO accountDAO, PasswordEncoder passwordEncoder) {
         this.accountDAO = accountDAO;
