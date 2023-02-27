@@ -9,7 +9,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "\"order_product\"")
+@Table(name = "order_product")
 public class OrderProduct {
 
     @Id
@@ -23,7 +23,5 @@ public class OrderProduct {
     @ManyToOne
     @JoinColumn(name = "product", referencedColumnName = "id", nullable = false)
     private Product product;
-
-
 
 }
