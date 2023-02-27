@@ -38,11 +38,11 @@ public class Product {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<OrderProduct> orderProducts;
+    private List<TransactionProduct> transactionProducts;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<OrderProduct> cartProducts;
+    private List<TransactionProduct> cartProducts;
 
     @CreationTimestamp
     @Temporal(TemporalType.DATE)

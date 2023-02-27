@@ -9,19 +9,25 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "order_product")
-public class OrderProduct {
+@Table(name = "transaction_product")
+public class TransactionProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "order", referencedColumnName = "id", nullable = false)
-    private Order order;
+    @JoinColumn(name = "transaction", referencedColumnName = "id", nullable = false)
+    private Transaction transaction;
 
     @ManyToOne
     @JoinColumn(name = "product", referencedColumnName = "id", nullable = false)
     private Product product;
+
+    @Column
+    private double payment;
+
+    @Column
+    private boolean delivered;
 
 }

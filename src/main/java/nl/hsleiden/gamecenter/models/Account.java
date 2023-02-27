@@ -39,7 +39,7 @@ public class Account {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Order> orders;
+    private List<Transaction> transactions;
 
     @CreationTimestamp
     @Temporal(TemporalType.DATE)

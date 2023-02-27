@@ -13,8 +13,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "order")
-public class Order {
+@Table(name = "transaction")
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,9 +24,9 @@ public class Order {
     @JoinColumn(name = "account", referencedColumnName = "id", nullable = false)
     private Account account;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<OrderProduct> orderProducts;
+    private List<TransactionProduct> transactionProducts;
 
     @CreationTimestamp
     @Temporal(TemporalType.DATE)
