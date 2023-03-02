@@ -30,7 +30,7 @@ public class Account {
     @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private Boolean administrator;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
