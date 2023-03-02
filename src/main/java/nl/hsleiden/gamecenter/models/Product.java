@@ -34,7 +34,7 @@ public class Product {
     private int stock;
 
     @Column
-    private int discount;
+    private int discountPercentage;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
