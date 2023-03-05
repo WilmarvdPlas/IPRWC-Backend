@@ -33,6 +33,9 @@ public class Account {
     @Column(nullable = false)
     private Boolean administrator;
 
+    @Column
+    private boolean archived;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<CartProduct> cartProducts;
