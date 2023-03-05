@@ -25,6 +25,9 @@ public class Product {
     private String name;
 
     @Column
+    private String description;
+
+    @Column
     private double price;
 
     @Column
@@ -35,6 +38,9 @@ public class Product {
 
     @Column
     private int discountPercentage;
+
+    @Column
+    private boolean archived;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
