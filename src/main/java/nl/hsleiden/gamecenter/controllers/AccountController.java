@@ -47,7 +47,7 @@ public class AccountController {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         accountDAO.createAccount(account);
 
-        return new ResponseEntity<>("Success", HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
 
