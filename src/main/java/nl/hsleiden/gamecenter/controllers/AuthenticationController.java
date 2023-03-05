@@ -35,7 +35,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginHandler(@RequestBody LoginCredentials body) {
+    public ResponseEntity loginHandler(@RequestBody LoginCredentials body) {
         try {
             UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(body.getEmail(), body.getPassword());
             authManager.authenticate(authInputToken);
@@ -47,10 +47,10 @@ public class AuthenticationController {
             responseBody.put("token", token);
             responseBody.put("account", account);
 
-            return new ResponseEntity<>(Collections.singletonMap("message", "Account not authorised"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
         catch (AuthenticationException authExc) {
-            return new ResponseEntity<>(Collections.singletonMap("message", "Invalid Login Credentials"), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(Collections.singletonMap("message", "Invalid Login Credentials"), HttpStatus.UNAUTHORIZED);
         }
     }
 }
