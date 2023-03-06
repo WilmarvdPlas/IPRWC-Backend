@@ -31,7 +31,7 @@ public class Product {
     private double priceEuro;
 
     @Column
-    private String image;
+    private String imageLink;
 
     @Column
     private int stock;
