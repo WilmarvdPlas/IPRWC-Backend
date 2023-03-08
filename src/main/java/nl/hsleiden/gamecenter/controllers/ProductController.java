@@ -23,5 +23,10 @@ public class ProductController {
         this.productDAO.createProduct(product);
         return new ResponseEntity(HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity getProducts() {
+        return new ResponseEntity(productDAO.getProducts(), HttpStatus.OK);
+    }
     
 }

@@ -4,6 +4,8 @@ import nl.hsleiden.gamecenter.models.Product;
 import nl.hsleiden.gamecenter.repositories.ProductRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class ProductDAO {
 
@@ -15,6 +17,10 @@ public class ProductDAO {
 
     public void createProduct(Product product) {
         this.repository.save(product);
+    }
+
+    public ArrayList<Product> getProducts() {
+        return this.repository.getNonArchivedProducts();
     }
 
 }
