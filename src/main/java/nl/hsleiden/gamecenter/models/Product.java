@@ -24,7 +24,7 @@ public class Product {
     @Column
     private String name;
 
-    @Column
+    @Column(columnDefinition = "text")
     private String description;
 
     @Column
