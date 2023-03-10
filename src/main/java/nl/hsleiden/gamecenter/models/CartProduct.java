@@ -19,6 +19,9 @@ public class CartProduct {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column
+    private int count;
+
     @ManyToOne
     @JoinColumn(name = "product", referencedColumnName = "id", nullable = false)
     private Product product;
