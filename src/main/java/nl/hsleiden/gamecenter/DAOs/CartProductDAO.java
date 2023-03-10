@@ -5,6 +5,9 @@ import nl.hsleiden.gamecenter.repositories.CartProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 @Component
 public class CartProductDAO {
 
@@ -17,6 +20,10 @@ public class CartProductDAO {
 
     public void createCartProduct(CartProduct cartProduct) {
         repository.save(cartProduct);
+    }
+
+    public ArrayList<CartProduct> getCartProductsByAccount(UUID accountId) {
+        return repository.findByAccount(accountId);
     }
 
 }
