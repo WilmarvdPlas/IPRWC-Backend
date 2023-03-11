@@ -22,13 +22,31 @@ public class CartProductController {
 
     @PostMapping
     public ResponseEntity addCartProduct(@RequestBody CartProduct cartProduct) {
-        this.cartProductDAO.addCartProduct(cartProduct);
-        return new ResponseEntity(HttpStatus.OK);
+        CartProduct cartProductByProduct = cartProductDAO.getCartProductByProduct(cartProduct.getProduct().getId());
+
+        if (cartProductByProduct == null) {
+            this.cartProductDAO.saveCartProduct(cartProduct);
+            return new ResponseEntity(HttpStatus.OK);
+        } else if (cartProductByProduct.getCount() < 100) {
+            cartProductByProduct.setCount(cartProductByProduct.getCount() + 1);
+            this.cartProductDAO.saveCartProduct(cartProductByProduct);
+            return new ResponseEntity(HttpStatus.OK);
+        } else if (cartProductByProduct.getCount() >= 100) {
+            return new ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(path = "account={id}")
     public  ResponseEntity getCartProductsByAccount(@PathVariable("id") UUID accountId) {
         return new ResponseEntity(cartProductDAO.getCartProductsByAccount(accountId), HttpStatus.OK);
+    }
+
+    @PutMapping(path = "product={productId}/update_count")
+    public ResponseEntity updateCount(@PathVariable("productId") UUID productId, @RequestBody int count) {
+        cartProductDAO.updateCount(productId, count);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }
