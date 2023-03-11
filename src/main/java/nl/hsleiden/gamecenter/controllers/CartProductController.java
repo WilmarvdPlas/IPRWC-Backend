@@ -50,8 +50,8 @@ public class CartProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "{id}")
-    public ResponseEntity<Object> deleteCartProduct(@PathVariable("id") UUID id) {
+    @DeleteMapping(path = "product={id}")
+    public ResponseEntity<Object> deleteCartProductByProductId(@PathVariable("id") UUID id) {
         cartProductDAO.deleteCartProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
