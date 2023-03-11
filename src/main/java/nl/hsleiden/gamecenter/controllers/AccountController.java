@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -24,17 +26,17 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity getAccounts() {
-        return new ResponseEntity(accountDAO.getAccounts(), HttpStatus.OK);
+    public ResponseEntity<List<Account>> getAccounts() {
+        return new ResponseEntity<>(accountDAO.getAccounts(), HttpStatus.OK);
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity getAccount(@PathVariable("id") UUID id) {
-        return new ResponseEntity(accountDAO.getAccount(id), HttpStatus.OK);
+    public ResponseEntity<Optional<Account>> getAccount(@PathVariable("id") UUID id) {
+        return new ResponseEntity<>(accountDAO.getAccount(id), HttpStatus.OK);
     }
 
     @PostMapping(path = "register")
-    public ResponseEntity createAccount(@RequestBody Account account) {
+    public ResponseEntity<Object> createAccount(@RequestBody Account account) {
 
         if (accountDAO.findAccountByEmail(account.getEmail()).isPresent()) {
             return new ResponseEntity<>("Email address is already in use", HttpStatus.CONFLICT);

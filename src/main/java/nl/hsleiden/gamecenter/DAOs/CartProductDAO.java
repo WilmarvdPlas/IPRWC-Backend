@@ -36,4 +36,9 @@ public class CartProductDAO {
         repository.save(cartProduct);
     }
 
+    public void deleteCartProduct(UUID id) {
+        CartProduct cartProduct = repository.findById(id).get();
+        repository.delete(cartProduct);
+    }
+
 }

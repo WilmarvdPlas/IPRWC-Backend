@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,19 +22,19 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody Product product) {
-        return new ResponseEntity(this.productDAO.createProduct(product), HttpStatus.CREATED);
+    public ResponseEntity<Object> createProduct(@RequestBody Product product) {
+        return new ResponseEntity<>(this.productDAO.createProduct(product), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity getProducts() {
-        return new ResponseEntity(productDAO.getProducts(), HttpStatus.OK);
+    public ResponseEntity<List<Product>> getProducts() {
+        return new ResponseEntity<>(productDAO.getProducts(), HttpStatus.OK);
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity addStock(@PathVariable("id") UUID id, @RequestBody int addedStock) {
+    public ResponseEntity<Object> addStock(@PathVariable("id") UUID id, @RequestBody int addedStock) {
         this.productDAO.addStock(id, addedStock);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
