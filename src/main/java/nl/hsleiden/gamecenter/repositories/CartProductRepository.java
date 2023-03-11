@@ -14,4 +14,7 @@ public interface CartProductRepository extends JpaRepository<CartProduct, UUID> 
     @Query("SELECT cartProduct FROM CartProduct cartProduct WHERE cartProduct.account.id = ?1")
     ArrayList<CartProduct> findByAccount(UUID accountId);
 
+    @Query("SELECT DISTINCT(cartProduct) FROM CartProduct cartProduct WHERE cartProduct.product.id = ?1")
+    CartProduct findCartProductByProduct(UUID productId);
+
 }

@@ -21,8 +21,8 @@ public class CartProductController {
     }
 
     @PostMapping
-    public ResponseEntity createCartProduct(@RequestBody CartProduct cartProduct) {
-        this.cartProductDAO.createCartProduct(cartProduct);
+    public ResponseEntity addCartProduct(@RequestBody CartProduct cartProduct) {
+        this.cartProductDAO.addCartProduct(cartProduct);
         return new ResponseEntity(HttpStatus.OK);
     }
 

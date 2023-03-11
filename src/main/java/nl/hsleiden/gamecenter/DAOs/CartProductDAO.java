@@ -18,8 +18,15 @@ public class CartProductDAO {
         this.repository = repository;
     }
 
-    public void createCartProduct(CartProduct cartProduct) {
-        repository.save(cartProduct);
+    public void addCartProduct(CartProduct cartProduct) {
+        CartProduct cartProductByProduct = repository.findCartProductByProduct(cartProduct.getProduct().getId());
+
+        if (cartProductByProduct == null) {
+            repository.save(cartProduct);
+        } else {
+            cartProductByProduct.setCount(cartProductByProduct.getCount() + 1);
+            repository.save(cartProductByProduct);
+        }
     }
 
     public ArrayList<CartProduct> getCartProductsByAccount(UUID accountId) {
