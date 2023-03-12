@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +36,11 @@ public class ProductController {
     public ResponseEntity<Object> addStock(@PathVariable("id") UUID id, @RequestBody int addedStock) {
         this.productDAO.addStock(id, addedStock);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity<Optional<Product>> getProduct(@PathVariable("id") UUID id) {
+        return new ResponseEntity<>(productDAO.getProduct(id), HttpStatus.OK);
     }
 
 }

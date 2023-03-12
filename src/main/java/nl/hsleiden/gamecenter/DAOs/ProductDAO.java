@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -24,7 +25,7 @@ public class ProductDAO {
     }
 
     public ArrayList<Product> getProducts() {
-        return this.repository.getNonArchivedProducts();
+        return repository.getNonArchivedProducts();
     }
 
     @Transactional
@@ -32,6 +33,10 @@ public class ProductDAO {
         Product product = this.repository.findById(id).get();
         int productStock = product.getStock();
         product.setStock(productStock + addedStock);
+    }
+
+    public Optional<Product> getProduct(UUID id) {
+        return repository.findById(id);
     }
 
 }
