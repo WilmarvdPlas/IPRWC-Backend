@@ -1,5 +1,6 @@
 package nl.hsleiden.gamecenter.DAOs;
 
+import nl.hsleiden.gamecenter.models.TransactionProduct;
 import nl.hsleiden.gamecenter.repositories.TransactionProductRepository;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,10 @@ public class TransactionProductDAO {
 
     public TransactionProductDAO(TransactionProductRepository repository) {
         this.repository = repository;
+    }
+
+    public void createTransactionProduct(TransactionProduct transactionProduct) {
+        repository.save(transactionProduct);
     }
 
 }
