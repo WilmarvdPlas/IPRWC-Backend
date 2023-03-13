@@ -25,6 +25,9 @@ public class TransactionProduct {
     private Product product;
 
     @Column
+    private int count;
+
+    @Column
     private double payment;
 
     @Column
