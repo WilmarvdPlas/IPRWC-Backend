@@ -28,11 +28,13 @@ public class ProductDAO {
         return repository.getNonArchivedProducts();
     }
 
-    @Transactional
-    public void addStock(UUID id, int addedStock) {
+    public void editStock(UUID id, int stockDifference) {
         Product product = this.repository.findById(id).get();
+
         int productStock = product.getStock();
-        product.setStock(productStock + addedStock);
+        product.setStock(productStock + stockDifference);
+
+        repository.save(product);
     }
 
     public Optional<Product> getProduct(UUID id) {

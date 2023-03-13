@@ -32,9 +32,9 @@ public class ProductController {
         return new ResponseEntity<>(productDAO.getProducts(), HttpStatus.OK);
     }
 
-    @PutMapping(path = "{id}")
-    public ResponseEntity<Object> addStock(@PathVariable("id") UUID id, @RequestBody int addedStock) {
-        this.productDAO.addStock(id, addedStock);
+    @PutMapping(path = "{id}/edit_stock")
+    public ResponseEntity<Object> editStock(@PathVariable("id") UUID id, @RequestBody int stockDifference) {
+        this.productDAO.editStock(id, stockDifference);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
