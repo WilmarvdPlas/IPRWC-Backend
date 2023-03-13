@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping(path = "api/transaction")
 public class TransactionController {
@@ -22,9 +24,8 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createTransaction(@RequestBody Transaction transaction) {
-        transactionDAO.createTransaction(transaction);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<UUID> createTransaction(@RequestBody Transaction transaction) {
+        return new ResponseEntity<>(transactionDAO.createTransaction(transaction), HttpStatus.CREATED);
     }
 
 }
