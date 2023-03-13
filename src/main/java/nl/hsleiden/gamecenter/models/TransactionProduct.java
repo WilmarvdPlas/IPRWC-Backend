@@ -28,7 +28,7 @@ public class TransactionProduct {
     private int count;
 
     @Column
-    private double payment;
+    private double paymentEuro;
 
     @Column
     private boolean delivered;
