@@ -5,10 +5,10 @@ import nl.hsleiden.gamecenter.models.TransactionProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "api/transaction_product")
@@ -25,6 +25,11 @@ public class TransactionProductController {
     public ResponseEntity<Object> createTransactionProduct(@RequestBody TransactionProduct transactionProduct) {
         transactionProductDAO.createTransactionProduct(transactionProduct);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "transaction={transactionId}")
+    public ResponseEntity<ArrayList<TransactionProduct>> getTransactionProductsByTransaction(@PathVariable UUID transactionId) {
+        return new ResponseEntity<>(transactionProductDAO.getTransactionProductsByTransaction(transactionId), HttpStatus.OK);
     }
 
 }
