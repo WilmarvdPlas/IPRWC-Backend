@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -25,6 +26,10 @@ public class TransactionDAO {
 
     public ArrayList<Transaction> getTransactionsByAccount(UUID accountId) {
         return repository.getTransactionsByAccount(accountId);
+    }
+
+    public List<Transaction> getTransactions() {
+        return repository.findAll();
     }
 
 }
