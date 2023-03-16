@@ -42,4 +42,10 @@ public class AccountDAO {
         repository.save(account);
     }
 
+    public void deleteAccount(UUID accountId) {
+        Account account = repository.findById(accountId).get();
+
+        repository.delete(account);
+    }
+
 }
