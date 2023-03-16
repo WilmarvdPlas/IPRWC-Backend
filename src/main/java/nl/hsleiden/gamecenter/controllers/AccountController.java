@@ -36,21 +36,29 @@ public class AccountController {
     }
 
     @PostMapping(path = "register")
-    public ResponseEntity<Object> createAccount(@RequestBody Account account) {
-
-        if (accountDAO.findAccountByEmail(account.getEmail()).isPresent()) {
-            return new ResponseEntity<>("Email address is already in use", HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<Object> registerAccount(@RequestBody Account account) {
 
         if (account.getAdministrator()) {
             return new ResponseEntity<>("Illegal registration", HttpStatus.UNAUTHORIZED);
+        }
+
+        return createAccountWithEmailCheck(account);
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createAccount(@RequestBody Account account) {
+        return createAccountWithEmailCheck(account);
+    }
+
+    private ResponseEntity<Object> createAccountWithEmailCheck(Account account) {
+        if (accountDAO.findAccountByEmail(account.getEmail()).isPresent()) {
+            return new ResponseEntity<>("Email address is already in use", HttpStatus.CONFLICT);
         }
 
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         accountDAO.createAccount(account);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
-
     }
 
 }
