@@ -35,9 +35,9 @@ public class AccountDAO {
         return repository.findById(id);
     }
 
-    public void setAdministrator(UUID accountId, boolean administrator) {
+    public void setAdministrator(UUID accountId) {
         Account account = repository.findById(accountId).get();
-        account.setAdministrator(administrator);
+        account.setAdministrator(true);
 
         repository.save(account);
     }

@@ -62,8 +62,8 @@ public class AccountController {
     }
 
     @PutMapping(path = "{id}/administrator")
-    public ResponseEntity<Object> setAdministrator(@PathVariable UUID id, @RequestBody boolean administrator) {
-        this.accountDAO.setAdministrator(id, administrator);
+    public ResponseEntity<Object> setAdministrator(@PathVariable UUID id) {
+        this.accountDAO.setAdministrator(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
