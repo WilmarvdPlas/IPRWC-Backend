@@ -73,7 +73,9 @@ public class AccountController {
     }
 
     @DeleteMapping(path = "{id}")
-    public ResponseEntity<Object> deleteAccount(@PathVariable UUID id, @RequestBody String token) {
+    public ResponseEntity<Object> deleteAccount(@PathVariable UUID id, @RequestHeader("authorization") String token) {
+        token = token.substring(7);
+
         boolean senderIsOwner = false;
         boolean senderIsAdministrator = false;
 
