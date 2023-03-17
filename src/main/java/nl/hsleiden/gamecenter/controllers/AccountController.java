@@ -127,6 +127,8 @@ public class AccountController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Object> editAccount(@PathVariable UUID id, @RequestHeader("authorization") String token, @RequestBody Account account) {
+        token = token.substring(7);
+
         boolean senderIsOwner;
 
         try {
