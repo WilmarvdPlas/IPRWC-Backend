@@ -23,7 +23,7 @@ public class AccountDAO {
         return repository.findAll();
     }
 
-    public void createAccount(Account account) {
+    public void saveAccount(Account account) {
         repository.save(account);
     }
 

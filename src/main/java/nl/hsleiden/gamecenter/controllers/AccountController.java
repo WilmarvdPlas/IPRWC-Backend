@@ -61,9 +61,35 @@ public class AccountController {
         }
 
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        accountDAO.createAccount(account);
+        accountDAO.saveAccount(account);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    private boolean senderIsOwner(String token, UUID id) throws JWTVerificationException {
+        boolean senderIsOwner = false;
+
+        String senderEmail = jwtUtil.validateTokenAndRetrieveSubject(token);
+
+        if (accountDAO.findAccountByEmail(senderEmail).isPresent()) {
+            Account senderAccount = accountDAO.findAccountByEmail(senderEmail).get();
+            senderIsOwner = senderAccount.getId() == id;
+        }
+
+        return senderIsOwner;
+    }
+
+    private boolean senderIsAdministrator(String token) {
+        boolean senderIsAdministrator = false;
+
+        String senderEmail = jwtUtil.validateTokenAndRetrieveSubject(token);
+
+        if (accountDAO.findAccountByEmail(senderEmail).isPresent()) {
+            Account senderAccount = accountDAO.findAccountByEmail(senderEmail).get();
+            senderIsAdministrator = senderAccount.getAdministrator();
+        }
+
+        return senderIsAdministrator;
     }
 
     @PutMapping(path = "{id}/administrator")
@@ -76,17 +102,13 @@ public class AccountController {
     public ResponseEntity<Object> deleteAccount(@PathVariable UUID id, @RequestHeader("authorization") String token) {
         token = token.substring(7);
 
-        boolean senderIsOwner = false;
-        boolean senderIsAdministrator = false;
+        boolean senderIsOwner;
+        boolean senderIsAdministrator;
 
         try {
-            String senderEmail = jwtUtil.validateTokenAndRetrieveSubject(token);
+            senderIsOwner = senderIsOwner(token, id);
+            senderIsAdministrator = senderIsAdministrator(token);
 
-            if (accountDAO.findAccountByEmail(senderEmail).isPresent()) {
-                Account senderAccount = accountDAO.findAccountByEmail(senderEmail).get();
-                senderIsOwner = senderAccount.getId() == id;
-                senderIsAdministrator = senderAccount.getAdministrator();
-            }
         } catch(JWTVerificationException exc) {
             return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
         }
@@ -100,6 +122,29 @@ public class AccountController {
         }
 
         accountDAO.deleteAccount(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping(path = "{id}")
+    public ResponseEntity<Object> editAccount(@PathVariable UUID id, @RequestHeader("authorization") String token, @RequestBody Account account) {
+        boolean senderIsOwner;
+
+        try {
+            senderIsOwner = senderIsOwner(token, id);
+        } catch(JWTVerificationException exc) {
+            return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!senderIsOwner) {
+            return new ResponseEntity<>("Accounts can only be edited by their owners.", HttpStatus.FORBIDDEN);
+        }
+
+        Optional<Account> optionalAccount = accountDAO.findAccountByEmail(account.getEmail());
+        if (optionalAccount.isPresent() && !optionalAccount.get().getPassword().equals(account.getPassword())) {
+            return new ResponseEntity<>("Passwords can only be altered through the change_password endpoint.", HttpStatus.FORBIDDEN);
+        }
+
+        accountDAO.saveAccount(account);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
