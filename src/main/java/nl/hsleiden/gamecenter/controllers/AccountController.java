@@ -149,7 +149,7 @@ public class AccountController {
         HashMap<Object, Object> responseBody = new HashMap<>();
         responseBody.put("token", newToken);
 
-        return new ResponseEntity<>(newToken ,HttpStatus.OK);
+        return new ResponseEntity<>(responseBody ,HttpStatus.OK);
     }
 
 }
