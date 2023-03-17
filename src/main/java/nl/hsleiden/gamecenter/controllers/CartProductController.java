@@ -23,17 +23,20 @@ public class CartProductController {
 
     @PostMapping
     public ResponseEntity<Object> addCartProduct(@RequestBody CartProduct cartProduct) {
-        CartProduct cartProductByProduct = cartProductDAO.getCartProductByProduct(cartProduct.getProduct().getId());
+        CartProduct cartProductByProduct = cartProductDAO.getCartProductByProductAndAccount(cartProduct.getProduct().getId(), cartProduct.getAccount().getId());
 
         if (cartProductByProduct == null) {
             this.cartProductDAO.saveCartProduct(cartProduct);
             return new ResponseEntity<>(HttpStatus.OK);
+
         } else if (cartProductByProduct.getCount() < 100) {
             cartProductByProduct.setCount(cartProductByProduct.getCount() + 1);
             this.cartProductDAO.saveCartProduct(cartProductByProduct);
             return new ResponseEntity<>(HttpStatus.OK);
+
         } else if (cartProductByProduct.getCount() >= 100) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -44,14 +47,14 @@ public class CartProductController {
         return new ResponseEntity<>(cartProductDAO.getCartProductsByAccount(accountId), HttpStatus.OK);
     }
 
-    @PutMapping(path = "product={productId}/update_count")
-    public ResponseEntity<Object> updateCount(@PathVariable("productId") UUID productId, @RequestBody int count) {
-        cartProductDAO.updateCount(productId, count);
+    @PutMapping(path = "{id}/update_count")
+    public ResponseEntity<Object> updateCount(@PathVariable("id") UUID id, @RequestBody int count) {
+        cartProductDAO.updateCount(id, count);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "product={id}")
-    public ResponseEntity<Object> deleteCartProductByProductId(@PathVariable("id") UUID id) {
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<Object> deleteCartProductByProductIdAndAccountId(@PathVariable("id") UUID id) {
         cartProductDAO.deleteCartProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

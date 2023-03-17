@@ -22,8 +22,8 @@ public class CartProductDAO {
         repository.save(cartProduct);
     }
 
-    public CartProduct getCartProductByProduct(UUID productId) {
-        return repository.findCartProductByProduct(productId);
+    public CartProduct getCartProductByProductAndAccount(UUID productId, UUID accountId) {
+        return repository.findCartProductByProductAndAccount(productId, accountId);
     }
 
     public ArrayList<CartProduct> getCartProductsByAccount(UUID accountId) {
@@ -31,14 +31,18 @@ public class CartProductDAO {
     }
 
     public void updateCount(UUID id, int count) {
-        CartProduct cartProduct = repository.findCartProductByProduct(id);
-        cartProduct.setCount(count);
-        repository.save(cartProduct);
+        if (repository.findById(id).isPresent()) {
+            CartProduct cartProduct = repository.findById(id).get();
+            cartProduct.setCount(count);
+            repository.save(cartProduct);
+        }
     }
 
-    public void deleteCartProduct(UUID productId) {
-        CartProduct cartProduct = repository.findCartProductByProduct(productId);
-        repository.delete(cartProduct);
+    public void deleteCartProduct(UUID id) {
+        if (repository.findById(id).isPresent()) {
+            CartProduct cartProduct = repository.findById(id).get();
+            repository.delete(cartProduct);
+        }
     }
 
 }
