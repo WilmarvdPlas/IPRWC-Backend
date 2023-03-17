@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +22,6 @@ public class AccountController {
     private final AccountDAO accountDAO;
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
-
 
     @Autowired
     public AccountController(AccountDAO accountDAO, PasswordEncoder passwordEncoder, JWTUtil jwtUtil) {
@@ -73,7 +73,7 @@ public class AccountController {
 
         if (accountDAO.findAccountByEmail(senderEmail).isPresent()) {
             Account senderAccount = accountDAO.findAccountByEmail(senderEmail).get();
-            senderIsOwner = senderAccount.getId() == id;
+            senderIsOwner = senderAccount.getId().equals(id);
         }
 
         return senderIsOwner;
@@ -141,13 +141,15 @@ public class AccountController {
             return new ResponseEntity<>("Accounts can only be edited by their owners.", HttpStatus.FORBIDDEN);
         }
 
-        Optional<Account> optionalAccount = accountDAO.findAccountByEmail(account.getEmail());
-        if (optionalAccount.isPresent() && !optionalAccount.get().getPassword().equals(account.getPassword())) {
-            return new ResponseEntity<>("Passwords can only be altered through the change_password endpoint.", HttpStatus.FORBIDDEN);
-        }
+        accountDAO.findAccountById(account.getId()).ifPresent(value -> account.setPassword(value.getPassword()));
 
         accountDAO.saveAccount(account);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        String newToken = jwtUtil.generateToken(account.getEmail());
+        HashMap<Object, Object> responseBody = new HashMap<>();
+        responseBody.put("token", newToken);
+
+        return new ResponseEntity<>(newToken ,HttpStatus.OK);
     }
 
 }
