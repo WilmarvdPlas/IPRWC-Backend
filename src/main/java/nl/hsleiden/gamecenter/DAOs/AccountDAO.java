@@ -31,6 +31,10 @@ public class AccountDAO {
         return repository.findAccountByEmail(email);
     }
 
+    public Optional<Account> findAccountById(UUID id) {
+        return repository.findById(id);
+    }
+
     public Optional<Account> getAccount(UUID id) {
         return repository.findById(id);
     }
