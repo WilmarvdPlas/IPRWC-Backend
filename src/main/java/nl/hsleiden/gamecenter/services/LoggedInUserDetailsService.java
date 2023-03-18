@@ -28,10 +28,6 @@ public class LoggedInUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findAccountByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found with e-mail: " + email));
 
-        if (account.isArchived()) {
-            throw new DisabledException("Account is archived and cannot be authenticated.");
-        }
-
         return new User(
                 email,
                 account.getPassword(),
