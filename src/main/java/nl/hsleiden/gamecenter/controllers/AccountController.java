@@ -99,7 +99,7 @@ public class AccountController {
     }
 
     @DeleteMapping(path = "{id}")
-    public ResponseEntity<Object> deleteAccount(@PathVariable UUID id, @RequestHeader("authorization") String token) {
+    public ResponseEntity<Object> setArchived(@PathVariable UUID id, @RequestHeader("authorization") String token) {
         token = token.substring(7);
 
         boolean senderIsOwner;
@@ -121,7 +121,7 @@ public class AccountController {
             return new ResponseEntity<>("Administrator accounts can only be deleted by their owners.", HttpStatus.FORBIDDEN);
         }
 
-        accountDAO.deleteAccount(id);
+        accountDAO.setArchived(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -5,6 +5,7 @@ import nl.hsleiden.gamecenter.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,16 +41,18 @@ public class AccountDAO {
     }
 
     public void setAdministrator(UUID accountId) {
-        Account account = repository.findById(accountId).get();
+        Account account = repository.findById(accountId).orElseThrow(EntityNotFoundException::new);
         account.setAdministrator(true);
 
         repository.save(account);
     }
 
-    public void deleteAccount(UUID accountId) {
-        Account account = repository.findById(accountId).get();
+    public void setArchived(UUID accountId) {
+        Account account = repository.findById(accountId).orElseThrow(EntityNotFoundException::new);
 
-        repository.delete(account);
+        account.setArchived(true);
+
+        repository.save(account);
     }
 
 }
