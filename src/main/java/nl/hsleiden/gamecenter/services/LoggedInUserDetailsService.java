@@ -3,6 +3,7 @@ package nl.hsleiden.gamecenter.services;
 import nl.hsleiden.gamecenter.models.Account;
 import nl.hsleiden.gamecenter.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,12 +26,11 @@ public class LoggedInUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Account> optionalAccount = accountRepository.findAccountByEmail(email);
-        if(optionalAccount.isEmpty()) {
-            throw new UsernameNotFoundException("Could not find user with email = " + email);
-        }
+        Account account = accountRepository.findAccountByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found with e-mail: " + email));
 
-        Account account = optionalAccount.get();
+        if (account.isArchived()) {
+            throw new DisabledException("Account is archived and cannot be authenticated.");
+        }
 
         return new User(
                 email,

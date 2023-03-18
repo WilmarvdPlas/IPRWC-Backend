@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, UUID> {
 
-    @Query("SELECT account FROM Account account WHERE account.email = ?1")
+    @Query("SELECT account FROM Account account WHERE account.email = ?1 AND account.archived = false")
     Optional<Account> findAccountByEmail(String email);
 
 }
