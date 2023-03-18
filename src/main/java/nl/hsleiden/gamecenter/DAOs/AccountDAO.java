@@ -21,7 +21,7 @@ public class AccountDAO {
     }
 
     public List<Account> getAccounts() {
-        return repository.findAll();
+        return repository.getNonArchivedAccounts();
     }
 
     public void saveAccount(Account account) {
