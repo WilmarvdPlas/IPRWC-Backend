@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,8 +35,12 @@ public class ProductController {
 
     @PutMapping(path = "{id}/edit_stock")
     public ResponseEntity<Object> editStock(@PathVariable("id") UUID id, @RequestBody int stockDifference) {
-        this.productDAO.editStock(id, stockDifference);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            this.productDAO.editStock(id, stockDifference);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException exc) {
+            return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(path = "{id}")

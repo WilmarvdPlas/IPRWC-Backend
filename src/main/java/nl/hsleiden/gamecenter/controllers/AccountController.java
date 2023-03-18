@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -66,28 +67,24 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    private boolean senderIsOwner(String token, UUID id) throws JWTVerificationException {
-        boolean senderIsOwner = false;
+    private boolean senderIsOwner(String token, UUID id) throws JWTVerificationException, EntityNotFoundException {
+        boolean senderIsOwner;
 
         String senderEmail = jwtUtil.validateTokenAndRetrieveSubject(token);
 
-        if (accountDAO.findAccountByEmail(senderEmail).isPresent()) {
-            Account senderAccount = accountDAO.findAccountByEmail(senderEmail).get();
-            senderIsOwner = senderAccount.getId().equals(id);
-        }
+        Account senderAccount = accountDAO.findAccountByEmail(senderEmail).orElseThrow(EntityNotFoundException::new);
+        senderIsOwner = senderAccount.getId().equals(id);
 
         return senderIsOwner;
     }
 
-    private boolean senderIsAdministrator(String token) {
-        boolean senderIsAdministrator = false;
+    private boolean senderIsAdministrator(String token) throws JWTVerificationException, EntityNotFoundException {
+        boolean senderIsAdministrator;
 
         String senderEmail = jwtUtil.validateTokenAndRetrieveSubject(token);
 
-        if (accountDAO.findAccountByEmail(senderEmail).isPresent()) {
-            Account senderAccount = accountDAO.findAccountByEmail(senderEmail).get();
-            senderIsAdministrator = senderAccount.getAdministrator();
-        }
+        Account senderAccount = accountDAO.findAccountByEmail(senderEmail).orElseThrow(EntityNotFoundException::new);
+        senderIsAdministrator = senderAccount.getAdministrator();
 
         return senderIsAdministrator;
     }
@@ -111,6 +108,8 @@ public class AccountController {
 
         } catch(JWTVerificationException exc) {
             return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException exc) {
+            return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
         }
 
         if (!senderIsAdministrator && !senderIsOwner) {
@@ -135,6 +134,8 @@ public class AccountController {
             senderIsOwner = senderIsOwner(token, id);
         } catch(JWTVerificationException exc) {
             return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException exc) {
+            return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
         }
 
         if (!senderIsOwner) {
@@ -165,6 +166,8 @@ public class AccountController {
             senderIsOwner = senderIsOwner(token, id);
         } catch(JWTVerificationException exc) {
             return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException exc) {
+            return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
         }
 
         if (!senderIsOwner) {

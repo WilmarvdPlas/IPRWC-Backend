@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -55,8 +56,13 @@ public class CartProductController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Object> deleteCartProductByProductIdAndAccountId(@PathVariable("id") UUID id) {
-        cartProductDAO.deleteCartProduct(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            cartProductDAO.deleteCartProduct(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException exception) {
+            return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
+        }
+
     }
 
 }

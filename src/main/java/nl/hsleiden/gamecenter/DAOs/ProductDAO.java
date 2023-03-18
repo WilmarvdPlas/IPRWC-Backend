@@ -5,6 +5,7 @@ import nl.hsleiden.gamecenter.repositories.ProductRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class ProductDAO {
     }
 
     public void editStock(UUID id, int stockDifference) {
-        Product product = this.repository.findById(id).get();
+        Product product = this.repository.findById(id).orElseThrow(EntityNotFoundException::new);
 
         int productStock = product.getStock();
         product.setStock(productStock + stockDifference);

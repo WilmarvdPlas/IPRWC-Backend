@@ -5,6 +5,7 @@ import nl.hsleiden.gamecenter.repositories.CartProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -31,18 +32,14 @@ public class CartProductDAO {
     }
 
     public void updateCount(UUID id, int count) {
-        if (repository.findById(id).isPresent()) {
-            CartProduct cartProduct = repository.findById(id).get();
-            cartProduct.setCount(count);
-            repository.save(cartProduct);
-        }
+        CartProduct cartProduct = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        cartProduct.setCount(count);
+        repository.save(cartProduct);
     }
 
     public void deleteCartProduct(UUID id) {
-        if (repository.findById(id).isPresent()) {
-            CartProduct cartProduct = repository.findById(id).get();
-            repository.delete(cartProduct);
-        }
+        CartProduct cartProduct = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        repository.delete(cartProduct);
     }
 
 }

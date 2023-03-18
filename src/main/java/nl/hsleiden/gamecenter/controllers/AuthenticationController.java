@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -40,7 +41,7 @@ public class AuthenticationController {
             authManager.authenticate(authInputToken);
 
             String token = jwtUtil.generateToken(body.getEmail());
-            Account account = accountDAO.findAccountByEmail(body.getEmail()).get();
+            Account account = accountDAO.findAccountByEmail(body.getEmail()).orElseThrow(EntityNotFoundException::new);
 
             HashMap<Object, Object> responseBody = new HashMap<>();
             responseBody.put("token", token);
