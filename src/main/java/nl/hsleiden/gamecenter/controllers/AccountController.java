@@ -152,4 +152,38 @@ public class AccountController {
         return new ResponseEntity<>(responseBody ,HttpStatus.OK);
     }
 
+    @PutMapping(path = "{id}/change_password")
+    public ResponseEntity<Object> changePassword(@PathVariable UUID id, @RequestBody HashMap<String, String> passwords, @RequestHeader("authorization") String token ) {
+        token = token.substring(7);
+
+        boolean senderIsOwner;
+
+        String oldPassword = passwords.get("oldPassword");
+        String newPassword = passwords.get("newPassword");
+
+        try {
+            senderIsOwner = senderIsOwner(token, id);
+        } catch(JWTVerificationException exc) {
+            return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!senderIsOwner) {
+            return new ResponseEntity<>("Passwords can only be changed by their owners.", HttpStatus.FORBIDDEN);
+        }
+
+        Optional<Account> optionalAccount = accountDAO.findAccountById(id);
+        if (optionalAccount.isEmpty()) {
+            return new ResponseEntity<>("Account with id '" + id + "' does not exist.", HttpStatus.NOT_FOUND);
+        }
+        Account account = optionalAccount.get();
+
+        if (!passwordEncoder.matches(oldPassword ,optionalAccount.get().getPassword())) {
+            return new ResponseEntity<>("Credentials are incorrect.", HttpStatus.UNAUTHORIZED);
+        }
+
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountDAO.saveAccount(account);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
