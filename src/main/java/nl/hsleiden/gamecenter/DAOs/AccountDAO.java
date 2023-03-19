@@ -1,24 +1,20 @@
 package nl.hsleiden.gamecenter.DAOs;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import nl.hsleiden.gamecenter.models.Account;
 import nl.hsleiden.gamecenter.repositories.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class AccountDAO {
 
     private final AccountRepository repository;
-
-    @Autowired
-    public AccountDAO(AccountRepository repository) {
-        this.repository = repository;
-    }
 
     public List<Account> getAccounts() {
         return repository.getNonArchivedAccounts();

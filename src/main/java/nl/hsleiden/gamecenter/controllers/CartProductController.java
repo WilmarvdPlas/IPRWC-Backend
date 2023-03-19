@@ -1,26 +1,22 @@
 package nl.hsleiden.gamecenter.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import nl.hsleiden.gamecenter.DAOs.CartProductDAO;
 import nl.hsleiden.gamecenter.models.CartProduct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "api/cart_product")
 public class CartProductController {
 
     private final CartProductDAO cartProductDAO;
-
-    @Autowired
-    public CartProductController(CartProductDAO cartProductDAO) {
-        this.cartProductDAO = cartProductDAO;
-    }
 
     @PostMapping
     public ResponseEntity<Object> addCartProduct(@RequestBody CartProduct cartProduct) {
@@ -55,7 +51,7 @@ public class CartProductController {
     }
 
     @DeleteMapping(path = "{id}")
-    public ResponseEntity<Object> deleteCartProductByProductIdAndAccountId(@PathVariable("id") UUID id) {
+    public ResponseEntity<Object> deleteCartProductById(@PathVariable("id") UUID id) {
         try {
             cartProductDAO.deleteCartProduct(id);
             return new ResponseEntity<>(HttpStatus.OK);

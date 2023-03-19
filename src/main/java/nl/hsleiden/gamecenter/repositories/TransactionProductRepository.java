@@ -1,6 +1,5 @@
 package nl.hsleiden.gamecenter.repositories;
 
-import nl.hsleiden.gamecenter.models.Transaction;
 import nl.hsleiden.gamecenter.models.TransactionProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

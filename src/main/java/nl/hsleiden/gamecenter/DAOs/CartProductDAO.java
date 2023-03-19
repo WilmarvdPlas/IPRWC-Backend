@@ -1,23 +1,19 @@
 package nl.hsleiden.gamecenter.DAOs;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import nl.hsleiden.gamecenter.models.CartProduct;
 import nl.hsleiden.gamecenter.repositories.CartProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class CartProductDAO {
 
     private final CartProductRepository repository;
-
-    @Autowired
-    public CartProductDAO(CartProductRepository repository) {
-        this.repository = repository;
-    }
 
     public void saveCartProduct(CartProduct cartProduct) {
         repository.save(cartProduct);

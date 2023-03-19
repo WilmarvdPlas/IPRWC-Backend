@@ -1,35 +1,28 @@
 package nl.hsleiden.gamecenter.controllers;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import nl.hsleiden.gamecenter.DAOs.AccountDAO;
 import nl.hsleiden.gamecenter.models.Account;
-import nl.hsleiden.gamecenter.security.JWTUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import nl.hsleiden.gamecenter.services.JWTService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "api/account")
 public class AccountController {
 
     private final AccountDAO accountDAO;
     private final PasswordEncoder passwordEncoder;
-    private final JWTUtil jwtUtil;
-
-    @Autowired
-    public AccountController(AccountDAO accountDAO, PasswordEncoder passwordEncoder, JWTUtil jwtUtil) {
-        this.accountDAO = accountDAO;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
+    private final JWTService jwtService;
 
     @GetMapping
     public ResponseEntity<List<Account>> getAccounts() {
@@ -67,10 +60,10 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    private boolean senderIsOwner(String token, UUID id) throws JWTVerificationException, EntityNotFoundException {
+    private boolean senderIsOwner(String token, UUID id) throws EntityNotFoundException {
         boolean senderIsOwner;
 
-        String senderEmail = jwtUtil.validateTokenAndRetrieveSubject(token);
+        String senderEmail = jwtService.extractEmail(token);
 
         Account senderAccount = accountDAO.findAccountByEmail(senderEmail).orElseThrow(EntityNotFoundException::new);
         senderIsOwner = senderAccount.getId().equals(id);
@@ -78,10 +71,10 @@ public class AccountController {
         return senderIsOwner;
     }
 
-    private boolean senderIsAdministrator(String token) throws JWTVerificationException, EntityNotFoundException {
+    private boolean senderIsAdministrator(String token) throws EntityNotFoundException {
         boolean senderIsAdministrator;
 
-        String senderEmail = jwtUtil.validateTokenAndRetrieveSubject(token);
+        String senderEmail = jwtService.extractEmail(token);
 
         Account senderAccount = accountDAO.findAccountByEmail(senderEmail).orElseThrow(EntityNotFoundException::new);
         senderIsAdministrator = senderAccount.getAdministrator();
@@ -105,9 +98,6 @@ public class AccountController {
         try {
             senderIsOwner = senderIsOwner(token, id);
             senderIsAdministrator = senderIsAdministrator(token);
-
-        } catch(JWTVerificationException exc) {
-            return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
         } catch (EntityNotFoundException exc) {
             return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
         }
@@ -132,8 +122,6 @@ public class AccountController {
 
         try {
             senderIsOwner = senderIsOwner(token, id);
-        } catch(JWTVerificationException exc) {
-            return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
         } catch (EntityNotFoundException exc) {
             return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
         }
@@ -146,7 +134,7 @@ public class AccountController {
 
         accountDAO.saveAccount(account);
 
-        String newToken = jwtUtil.generateToken(account.getEmail());
+        String newToken = jwtService.generateToken(account.getEmail());
         HashMap<Object, Object> responseBody = new HashMap<>();
         responseBody.put("token", newToken);
 
@@ -164,8 +152,6 @@ public class AccountController {
 
         try {
             senderIsOwner = senderIsOwner(token, id);
-        } catch(JWTVerificationException exc) {
-            return new ResponseEntity<>("Invalid JWT Token", HttpStatus.BAD_REQUEST);
         } catch (EntityNotFoundException exc) {
             return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
         }

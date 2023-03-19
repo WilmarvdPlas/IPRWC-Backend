@@ -1,5 +1,6 @@
 package nl.hsleiden.gamecenter.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import nl.hsleiden.gamecenter.DAOs.ProductDAO;
 import nl.hsleiden.gamecenter.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
