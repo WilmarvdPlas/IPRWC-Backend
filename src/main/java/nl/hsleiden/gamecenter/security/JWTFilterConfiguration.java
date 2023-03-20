@@ -1,5 +1,6 @@
 package nl.hsleiden.gamecenter.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import nl.hsleiden.gamecenter.services.ImplementationUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,9 @@ public class JWTFilterConfiguration {
                 .requestMatchers("/api/product/{id}/edit_stock").hasRole("ADMINISTRATOR")
                 .requestMatchers(HttpMethod.POST, "/api/product").hasRole("ADMINISTRATOR")
                 .requestMatchers(HttpMethod.GET, "/api/transaction").hasRole("ADMINISTRATOR")
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
                 .and()
                 .userDetailsService(userDetailsService)
                 .sessionManagement()
