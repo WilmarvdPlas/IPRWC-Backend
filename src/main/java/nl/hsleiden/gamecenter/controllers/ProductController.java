@@ -25,6 +25,9 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
+        if (product.getDiscountPercentage() < 0 || product.getDiscountPercentage() > 100) {
+            return new ResponseEntity<>("Discount percentage must be between 0 and 100.", HttpStatus.NOT_ACCEPTABLE);
+        }
         return new ResponseEntity<>(this.productDAO.createProduct(product), HttpStatus.CREATED);
     }
 
