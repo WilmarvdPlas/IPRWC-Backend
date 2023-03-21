@@ -27,6 +27,7 @@ public class JWTFilterConfiguration {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/account/register").permitAll()
                 // USER AND ADMIN ROUTES
+                .requestMatchers("/api/cart_product/{id}/buy_product").hasAnyRole("USER", "ADMINISTRATOR")
                 .requestMatchers("/api/account/{id}").hasAnyRole("USER", "ADMINISTRATOR")
                 .requestMatchers(HttpMethod.GET, "/api/product").hasAnyRole("USER", "ADMINISTRATOR")
                 .requestMatchers("/api/account/{id}/change_password").hasAnyRole("USER", "ADMINISTRATOR")

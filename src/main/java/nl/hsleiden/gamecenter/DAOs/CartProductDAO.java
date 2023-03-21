@@ -27,6 +27,10 @@ public class CartProductDAO {
         return repository.findByAccount(accountId);
     }
 
+    public CartProduct getCartProductById(UUID id) {
+        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
     public void updateCount(UUID id, int count) {
         CartProduct cartProduct = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         cartProduct.setCount(count);
