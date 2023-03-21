@@ -6,6 +6,7 @@ import nl.hsleiden.gamecenter.DAOs.CartProductDAO;
 import nl.hsleiden.gamecenter.DAOs.ProductDAO;
 import nl.hsleiden.gamecenter.models.CartProduct;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,20 @@ public class CartProductController {
         }
     }
 
-    @GetMapping(path = "account={id}")
+    @PostMapping(path = "transfer_cart")
+    public ResponseEntity<Object> transferCart(@RequestBody ArrayList<CartProduct> cartProducts) {
+        for (CartProduct cartProduct: cartProducts) {
+            HttpStatusCode statusCode = addCartProduct(cartProduct).getStatusCode();
+
+            if (statusCode != HttpStatus.OK) {
+                return new ResponseEntity<>(statusCode);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+        @GetMapping(path = "account={id}")
     public  ResponseEntity<ArrayList<CartProduct>> getCartProductsByAccount(@PathVariable("id") UUID accountId) {
         return new ResponseEntity<>(cartProductDAO.getCartProductsByAccount(accountId), HttpStatus.OK);
     }
@@ -75,9 +89,5 @@ public class CartProductController {
         } catch (EntityNotFoundException exception) {
             return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
         }
-
     }
-
-
-
 }
