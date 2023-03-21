@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -47,8 +46,12 @@ public class ProductController {
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<Optional<Product>> getProduct(@PathVariable("id") UUID id) {
-        return new ResponseEntity<>(productDAO.getProduct(id), HttpStatus.OK);
+    public ResponseEntity<Object> getProduct(@PathVariable("id") UUID id) {
+        try {
+            Product product = productDAO.getProduct(id).orElseThrow(EntityNotFoundException::new);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (EntityNotFoundException exception) {
+            return new ResponseEntity<>("Entity could not be found.", HttpStatus.NOT_FOUND);
+        }
     }
-
 }
