@@ -69,7 +69,6 @@ public class CartProductController {
 
             CartProduct cartProduct = cartProductDAO.getCartProductById(id);
             productDAO.editStock(cartProduct.getProduct().getId(), -(cartProduct.getCount()));
-            System.out.println("DELETING");
             cartProductDAO.deleteCartProduct(id);
 
             return new ResponseEntity<>(HttpStatus.OK);
