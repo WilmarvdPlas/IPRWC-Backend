@@ -35,7 +35,7 @@ public class CartProductController {
             return new ResponseEntity<>(HttpStatus.OK);
 
         } else if (cartProductByProduct.getCount() >= 100) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -82,6 +82,11 @@ public class CartProductController {
         try {
 
             CartProduct cartProduct = cartProductDAO.getCartProductById(id);
+
+            if (cartProduct.getProduct().getStock() < cartProduct.getCount()) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
             productDAO.editStock(cartProduct.getProduct().getId(), -(cartProduct.getCount()));
             cartProductDAO.deleteCartProduct(id);
 
