@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class AuthenticationResponse {
 
-    String token;
-    Account account;
+    private String token;
+    private Account account;
 
 }
