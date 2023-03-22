@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,22 +37,28 @@ public class AccountController {
 
     @PostMapping(path = "register")
     public ResponseEntity<Object> registerAccount(@RequestBody Account account) {
-
         if (account.getAdministrator()) {
             return new ResponseEntity<>("Illegal registration", HttpStatus.UNAUTHORIZED);
         }
 
-        return createAccountWithEmailCheck(account);
+        return createAccountWithEmailAndRegexCheck(account);
     }
 
     @PostMapping
     public ResponseEntity<Object> createAccount(@RequestBody Account account) {
-        return createAccountWithEmailCheck(account);
+        return createAccountWithEmailAndRegexCheck(account);
     }
 
-    private ResponseEntity<Object> createAccountWithEmailCheck(Account account) {
+    private ResponseEntity<Object> createAccountWithEmailAndRegexCheck(Account account) {
+        String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        String passwordRegex = "(?=^.{8,}$)(?=.*\\d)(?=.*[!@#$%^&*]+)(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+
         if (accountDAO.findAccountByEmail(account.getEmail()).isPresent()) {
             return new ResponseEntity<>("Email address is already in use", HttpStatus.CONFLICT);
+        } else if (!Pattern.matches(emailRegex, account.getEmail())) {
+            return new ResponseEntity<>("E-mail address must have a valid format", HttpStatus.CONFLICT);
+        } else if (!Pattern.matches(passwordRegex, account.getPassword())) {
+            return new ResponseEntity<>("Password address must have a valid format", HttpStatus.CONFLICT);
         }
 
         account.setPassword(passwordEncoder.encode(account.getPassword()));

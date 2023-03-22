@@ -26,6 +26,8 @@ public class ProductController {
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
         if (product.getDiscountPercentage() < 0 || product.getDiscountPercentage() > 100) {
             return new ResponseEntity<>("Discount percentage must be between 0 and 100.", HttpStatus.CONFLICT);
+        } else if (product.getPriceEuro() < 0.01) {
+            return new ResponseEntity<>("Price must be bigger than €0.01", HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(this.productDAO.createProduct(product), HttpStatus.CREATED);
     }
