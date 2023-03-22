@@ -1,9 +1,9 @@
 package nl.hsleiden.gamecenter.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import nl.hsleiden.gamecenter.DAOs.ProductDAO;
 import nl.hsleiden.gamecenter.models.Product;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +12,11 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "api/product")
 public class ProductController {
 
     private final ProductDAO productDAO;
-
-    @Autowired
-    public ProductController(ProductDAO productDAO) {
-        this.productDAO = productDAO;
-    }
 
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
